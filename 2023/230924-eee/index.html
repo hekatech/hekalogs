@@ -125,10 +125,10 @@
     
 
   <span class="word-count">字数统计：
-    <span class="word-count-symbol">23</span>
+    <span class="word-count-symbol">1.6k</span>
   </span>
   <span class="word-count">阅读时间：
-    <span class="word-count-time">1 mins</span>
+    <span class="word-count-time">3 mins</span>
   </span>
   
     <span class="word-count">访问次数：
@@ -143,14 +143,45 @@
   </div>
     <div class="article-info">
     
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E7%BB%B4%E6%8A%A4%E6%97%A5%E5%BF%97/">维护日志</a></li></ul>
+
 
     
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RIME/" rel="tag">RIME</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/" rel="tag">git</a></li></ul>
+
 
   </div>
 </div>
   
   <div class="article-entry">
-    <p>管理员安装<br>删除 deploy_Git<br>复制 ssh？</p>
+    <p>　　显卡烧了之后的重装系统之路……<br>　　<del>总之现在遇到的问题是 6c 的 blog 能正常更新但 4o 的 push 不动东西了，很神秘</del>好像只是网卡了重新生成了一下就上传上去了【<br>　　本文包含的内容：重装系统后恢复 hexo 更新，小狼毫 v0.15 自定义标点，Sublime Text 3 自定义配置。</p>
+<span id="more"></span>
+
+<h3 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h3><p>　　首先是重装依赖：Node.js，Git，因为硬盘里有残余文件所以反复安装卸载……以及似乎需要管理员权限才能安装成功，尤其是 git 的右键菜单。<br>　　我感觉我的账户权限也不是很对……<br>　　然后 Node.js 现在的官方稳定版本是 v18.18，hexo 客户端最高只支持到 v18.05，我感觉装 v14 的就够了。</p>
+<h4 id="Git-重配置"><a href="#Git-重配置" class="headerlink" title="Git 重配置"></a>Git 重配置</h4><p>　　首先需要配置账户，在 git 命令行中输入：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --<span class="built_in">global</span> user.name <span class="string">&quot;用户名&quot;</span></span><br><span class="line">git config --<span class="built_in">global</span> user.email 邮箱@邮箱.com</span><br></pre></td></tr></table></figure>
+<p>　　但生成文件的时候还是遇到了报错，提示仓库归属人与当前用户不符合，可能是系统识别码发生了变更的问题……<br>　　这个也很好解决，直接把 <code>.deploy_git</code> 文件夹整个删掉就解决了。不过这个方法会清空所有的 commit，但网站的历史版本全部收录在 <code>deployments</code> 里，对我来说影响不大。非 hexo 的仓库应该可以通过重新拉取来解决？<br>　　另外 ssh 文件直接从原来的系统里复制粘贴就可以了。</p>
+<h3 id="小狼毫"><a href="#小狼毫" class="headerlink" title="小狼毫"></a>小狼毫</h3><p>　　升级到了 0.15 版（我也不知道为什么要升级），总之配置文件的写法变了许多……<br>　　现在与输入相关的设置似乎要为每一个输入方案单独建立一个配置文件，以默认的朙月拼音为例，新建 <code>luna_pinyin.custom.yaml</code>：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">patch:</span></span><br><span class="line">  <span class="string">&quot;switches/@0/reset&quot;</span><span class="string">:</span> <span class="number">1</span></span><br><span class="line">  <span class="comment"># 默认设为英文输入法</span></span><br><span class="line">  <span class="attr">punctuator/half_shape:</span></span><br><span class="line">  <span class="comment"># 标点设置</span></span><br><span class="line">    <span class="string">&#x27;#&#x27;</span> <span class="string">:</span> <span class="string">&#x27;#&#x27;</span> <span class="string">//</span> <span class="string">直接输出</span></span><br><span class="line">    <span class="string">&#x27;`&#x27;</span> <span class="string">:</span> [ <span class="string">&#x27;·&#x27;</span>, <span class="string">&#x27;◆&#x27;</span>, <span class="string">&#x27;■&#x27;</span>, <span class="string">&#x27;✦&#x27;</span>]</span><br><span class="line">    <span class="comment"># 候选框</span></span><br><span class="line">    <span class="string">&#x27;&quot;&#x27;</span> <span class="string">:</span> &#123; <span class="attr">pair:</span> [ <span class="string">&#x27;「&#x27;</span>, <span class="string">&#x27;」&#x27;</span> ] &#125;</span><br><span class="line">    <span class="comment"># 对称标点，输出第一个【“】转换成【「】，第二个转换成【」】</span></span><br></pre></td></tr></table></figure>
+
+<p>　　好消息是外观上似乎美化了不少，现在输入框变成了圆角的，看了一下还支持半透明配色和自定义字体了，那么是不是可以期待一下自定义背景图……</p>
+<h4 id="横排候选框"><a href="#横排候选框" class="headerlink" title="横排候选框"></a>横排候选框</h4><p>　　老生常谈的输入法不跟手问题……把候选框从竖排换成横排会好看一些。<br>　　在 <code>weasel.custom.yaml</code> 的 <code>path</code> 配置下添加：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;style/horizontal&quot;:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>　　之后重新部署即可。</p>
+<h3 id="Sublime-Text"><a href="#Sublime-Text" class="headerlink" title="Sublime Text"></a>Sublime Text</h3><p>　　因为小狼毫输入法不跟手的问题又开始搜 IMEsupport，发现已经停止了对 3.0 以下的版本的支持，于是又无奈升级了……<br>　　升级完发现输入法直接就能跟手了！但是又出现了很多新问题 :4o-3:</p>
+<h4 id="移除更新提示"><a href="#移除更新提示" class="headerlink" title="移除更新提示"></a>移除更新提示</h4><p>　　1. 编辑 host 加入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1 www.sublimetext.com</span><br><span class="line">127.0.0.1 license.sublimehq.com</span><br></pre></td></tr></table></figure>
+
+<p>　　2. 填写激活码：<em>Sublime Text 3.x (after Build 32XX)</em></p>
+<blockquote>
+<p>—– BEGIN LICENSE —–<br>Member J2TeaM<br>Single User License<br>EA7E-1011316<br>D7DA350E 1B8B0760 972F8B60 F3E64036<br>B9B4E234 F356F38F 0AD1E3B7 0E9C5FAD<br>FA0A2ABE 25F65BD8 D51458E5 3923CE80<br>87428428 79079A01 AA69F319 A1AF29A4<br>A684C2DC 0B1583D4 19CBD290 217618CD<br>5653E0A0 BACE3948 BB2EE45E 422D2C87<br>DD9AF44B 99C49590 D2DBDEE1 75860FD2<br>8C8BB2AD B2ECE5A4 EFC08AF2 25A9B864<br>—— END LICENSE ——​ </p>
+</blockquote>
+<p>　　3. 在配置文件中加入：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;update_check&quot;:</span> <span class="literal">false</span><span class="string">,</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="安装-boxy-主题"><a href="#安装-boxy-主题" class="headerlink" title="安装 boxy 主题"></a>安装 boxy 主题</h4><p>　　之前一直在用的 ST 主题是 <code>Boxy Ocean</code>，更新之后发现噩耗：作者把这个主题的 hexo 仓库删了。<br>　　是通过其它用户的备份安装上的：<a target="_blank" rel="noopener" href="https://github.com/balthild/boxy-theme-backup/tree/master">boxy-theme-backup</a><br>　　下载后将两个文件夹放在 C 盘 AppData 里的的 <code>Installed Packages</code> 目录下，<code>Boxy Theme.sublime-package</code> 放置到<em>软件安装目录</em> <code>X:\Program Files (x86)\Sublime Text 3\Packages</code> 下，再重启 ST 就可以在主题和配色方案里找到 Boxy 主题了。</p>
+<h4 id="项目与文件夹"><a href="#项目与文件夹" class="headerlink" title="项目与文件夹"></a>项目与文件夹</h4><p>　　之前使用的时候不太懂事，只知道打开单个文件夹。因为现在需要同时更新三个 blog，我就试着打开了存放所有 blog 的总文件夹，好家伙 CPU 占用直接飙到 70%，风扇狂转……<br>　　搜了一下得知可以使用 <code>项目</code>→<code>添加文件夹到项目</code> 打开多个文件夹，再顺便保存一下项目就可以快捷切换写作和捣鼓代码模式了 :4o-3:</p>
 
   </div>
   <div class="clear" style="clear:both;"></div>
@@ -169,7 +200,7 @@
   <span>© 2023 冥月计划开发部-<a rel="me" href="/">「e686a7e3828c」</a></span>
   <span>转载本站图文请附上<a href="">「原始链接」</a></span>
   <span class="description">已收录数据
-    <em class="word-count-symbol">&nbsp;4k&nbsp;</em>
+    <em class="word-count-symbol">&nbsp;6k&nbsp;</em>
     字，登记访客&nbsp;
     <em id="/" class="waline-visitor-count">...</em>
     &nbsp;人。
@@ -180,7 +211,7 @@
 
 
   <div class="article-toc">
-    
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Hexo"><span class="toc-number">1.</span> <span class="toc-text">Hexo</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Git-%E9%87%8D%E9%85%8D%E7%BD%AE"><span class="toc-number">1.1.</span> <span class="toc-text">Git 重配置</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E7%8B%BC%E6%AF%AB"><span class="toc-number">2.</span> <span class="toc-text">小狼毫</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A8%AA%E6%8E%92%E5%80%99%E9%80%89%E6%A1%86"><span class="toc-number">2.1.</span> <span class="toc-text">横排候选框</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Sublime-Text"><span class="toc-number">3.</span> <span class="toc-text">Sublime Text</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A7%BB%E9%99%A4%E6%9B%B4%E6%96%B0%E6%8F%90%E7%A4%BA"><span class="toc-number">3.1.</span> <span class="toc-text">移除更新提示</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-boxy-%E4%B8%BB%E9%A2%98"><span class="toc-number">3.2.</span> <span class="toc-text">安装 boxy 主题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E4%B8%8E%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-number">3.3.</span> <span class="toc-text">项目与文件夹</span></a></li></ol></li></ol>
   </div>
 
 
@@ -327,7 +358,7 @@
         serverURL: 'https://waline-4o-cx.vercel.app/',
         emoji: [],
         uploadImage: false,
-        visitor: false,
+        visitor: true,
         requiredMeta: ['nick', 'mail'],
         placeholder:"欢迎留言 ~ 登录非必选项，填上昵称和邮箱即可提交评论并显示 Libravatar / Gravatar",
       });

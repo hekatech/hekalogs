@@ -6,7 +6,7 @@
   <link href="https://6c.hekatech.cc/atom.xml" rel="self"/>
   
   <link href="https://6c.hekatech.cc/"/>
-  <updated>2023-09-24T00:24:51.572Z</updated>
+  <updated>2023-09-24T04:02:24.701Z</updated>
   <id>https://6c.hekatech.cc/</id>
   
   <author>
@@ -21,19 +21,21 @@
     <link href="https://6c.hekatech.cc/2023/230924-eee/"/>
     <id>https://6c.hekatech.cc/2023/230924-eee/</id>
     <published>2023-09-24T00:23:54.000Z</published>
-    <updated>2023-09-24T00:24:51.572Z</updated>
+    <updated>2023-09-24T04:02:24.701Z</updated>
     
-    <content type="html"><![CDATA[<p>管理员安装<br>删除 deploy_Git<br>复制 ssh？</p>]]></content>
+    <content type="html"><![CDATA[<p>　　显卡烧了之后的重装系统之路……<br>　　<del>总之现在遇到的问题是 6c 的 blog 能正常更新但 4o 的 push 不动东西了，很神秘</del>好像只是网卡了重新生成了一下就上传上去了【<br>　　本文包含的内容：重装系统后恢复 hexo 更新，小狼毫 v0.15 自定义标点，Sublime Text 3 自定义配置。</p><span id="more"></span><h3 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h3><p>　　首先是重装依赖：Node.js，Git，因为硬盘里有残余文件所以反复安装卸载……以及似乎需要管理员权限才能安装成功，尤其是 git 的右键菜单。<br>　　我感觉我的账户权限也不是很对……<br>　　然后 Node.js 现在的官方稳定版本是 v18.18，hexo 客户端最高只支持到 v18.05，我感觉装 v14 的就够了。</p><h4 id="Git-重配置"><a href="#Git-重配置" class="headerlink" title="Git 重配置"></a>Git 重配置</h4><p>　　首先需要配置账户，在 git 命令行中输入：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --<span class="built_in">global</span> user.name <span class="string">&quot;用户名&quot;</span></span><br><span class="line">git config --<span class="built_in">global</span> user.email 邮箱@邮箱.com</span><br></pre></td></tr></table></figure><p>　　但生成文件的时候还是遇到了报错，提示仓库归属人与当前用户不符合，可能是系统识别码发生了变更的问题……<br>　　这个也很好解决，直接把 <code>.deploy_git</code> 文件夹整个删掉就解决了。不过这个方法会清空所有的 commit，但网站的历史版本全部收录在 <code>deployments</code> 里，对我来说影响不大。非 hexo 的仓库应该可以通过重新拉取来解决？<br>　　另外 ssh 文件直接从原来的系统里复制粘贴就可以了。</p><h3 id="小狼毫"><a href="#小狼毫" class="headerlink" title="小狼毫"></a>小狼毫</h3><p>　　升级到了 0.15 版（我也不知道为什么要升级），总之配置文件的写法变了许多……<br>　　现在与输入相关的设置似乎要为每一个输入方案单独建立一个配置文件，以默认的朙月拼音为例，新建 <code>luna_pinyin.custom.yaml</code>：</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">patch:</span></span><br><span class="line">  <span class="string">&quot;switches/@0/reset&quot;</span><span class="string">:</span> <span class="number">1</span></span><br><span class="line">  <span class="comment"># 默认设为英文输入法</span></span><br><span class="line">  <span class="attr">punctuator/half_shape:</span></span><br><span class="line">  <span class="comment"># 标点设置</span></span><br><span class="line">    <span class="string">&#x27;#&#x27;</span> <span class="string">:</span> <span class="string">&#x27;#&#x27;</span> <span class="string">//</span> <span class="string">直接输出</span></span><br><span class="line">    <span class="string">&#x27;`&#x27;</span> <span class="string">:</span> [ <span class="string">&#x27;·&#x27;</span>, <span class="string">&#x27;◆&#x27;</span>, <span class="string">&#x27;■&#x27;</span>, <span class="string">&#x27;✦&#x27;</span>]</span><br><span class="line">    <span class="comment"># 候选框</span></span><br><span class="line">    <span class="string">&#x27;&quot;&#x27;</span> <span class="string">:</span> &#123; <span class="attr">pair:</span> [ <span class="string">&#x27;「&#x27;</span>, <span class="string">&#x27;」&#x27;</span> ] &#125;</span><br><span class="line">    <span class="comment"># 对称标点，输出第一个【“】转换成【「】，第二个转换成【」】</span></span><br></pre></td></tr></table></figure><p>　　好消息是外观上似乎美化了不少，现在输入框变成了圆角的，看了一下还支持半透明配色和自定义字体了，那么是不是可以期待一下自定义背景图……</p><h4 id="横排候选框"><a href="#横排候选框" class="headerlink" title="横排候选框"></a>横排候选框</h4><p>　　老生常谈的输入法不跟手问题……把候选框从竖排换成横排会好看一些。<br>　　在 <code>weasel.custom.yaml</code> 的 <code>path</code> 配置下添加：</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;style/horizontal&quot;:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure><p>　　之后重新部署即可。</p><h3 id="Sublime-Text"><a href="#Sublime-Text" class="headerlink" title="Sublime Text"></a>Sublime Text</h3><p>　　因为小狼毫输入法不跟手的问题又开始搜 IMEsupport，发现已经停止了对 3.0 以下的版本的支持，于是又无奈升级了……<br>　　升级完发现输入法直接就能跟手了！但是又出现了很多新问题 :4o-3:</p><h4 id="移除更新提示"><a href="#移除更新提示" class="headerlink" title="移除更新提示"></a>移除更新提示</h4><p>　　1. 编辑 host 加入：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1 www.sublimetext.com</span><br><span class="line">127.0.0.1 license.sublimehq.com</span><br></pre></td></tr></table></figure><p>　　2. 填写激活码：<em>Sublime Text 3.x (after Build 32XX)</em></p><blockquote><p>—– BEGIN LICENSE —–<br>Member J2TeaM<br>Single User License<br>EA7E-1011316<br>D7DA350E 1B8B0760 972F8B60 F3E64036<br>B9B4E234 F356F38F 0AD1E3B7 0E9C5FAD<br>FA0A2ABE 25F65BD8 D51458E5 3923CE80<br>87428428 79079A01 AA69F319 A1AF29A4<br>A684C2DC 0B1583D4 19CBD290 217618CD<br>5653E0A0 BACE3948 BB2EE45E 422D2C87<br>DD9AF44B 99C49590 D2DBDEE1 75860FD2<br>8C8BB2AD B2ECE5A4 EFC08AF2 25A9B864<br>—— END LICENSE ——​ </p></blockquote><p>　　3. 在配置文件中加入：</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;update_check&quot;:</span> <span class="literal">false</span><span class="string">,</span></span><br></pre></td></tr></table></figure><h4 id="安装-boxy-主题"><a href="#安装-boxy-主题" class="headerlink" title="安装 boxy 主题"></a>安装 boxy 主题</h4><p>　　之前一直在用的 ST 主题是 <code>Boxy Ocean</code>，更新之后发现噩耗：作者把这个主题的 hexo 仓库删了。<br>　　是通过其它用户的备份安装上的：<a href="https://github.com/balthild/boxy-theme-backup/tree/master">boxy-theme-backup</a><br>　　下载后将两个文件夹放在 C 盘 AppData 里的的 <code>Installed Packages</code> 目录下，<code>Boxy Theme.sublime-package</code> 放置到<em>软件安装目录</em> <code>X:\Program Files (x86)\Sublime Text 3\Packages</code> 下，再重启 ST 就可以在主题和配色方案里找到 Boxy 主题了。</p><h4 id="项目与文件夹"><a href="#项目与文件夹" class="headerlink" title="项目与文件夹"></a>项目与文件夹</h4><p>　　之前使用的时候不太懂事，只知道打开单个文件夹。因为现在需要同时更新三个 blog，我就试着打开了存放所有 blog 的总文件夹，好家伙 CPU 占用直接飙到 70%，风扇狂转……<br>　　搜了一下得知可以使用 <code>项目</code>→<code>添加文件夹到项目</code> 打开多个文件夹，再顺便保存一下项目就可以快捷切换写作和捣鼓代码模式了 :4o-3:</p>]]></content>
     
     
-      
-      
-    <summary type="html">&lt;p&gt;管理员安装&lt;br&gt;删除 deploy_Git&lt;br&gt;复制 ssh？&lt;/p&gt;
-</summary>
-      
+    <summary type="html">&lt;p&gt;　　显卡烧了之后的重装系统之路……&lt;br&gt;　　&lt;del&gt;总之现在遇到的问题是 6c 的 blog 能正常更新但 4o 的 push 不动东西了，很神秘&lt;/del&gt;好像只是网卡了重新生成了一下就上传上去了【&lt;br&gt;　　本文包含的内容：重装系统后恢复 hexo 更新，小狼毫 v0.15 自定义标点，Sublime Text 3 自定义配置。&lt;/p&gt;</summary>
     
     
     
+    <category term="维护日志" scheme="https://6c.hekatech.cc/categories/%E7%BB%B4%E6%8A%A4%E6%97%A5%E5%BF%97/"/>
+    
+    
+    <category term="git" scheme="https://6c.hekatech.cc/tags/git/"/>
+    
+    <category term="RIME" scheme="https://6c.hekatech.cc/tags/RIME/"/>
     
   </entry>
   

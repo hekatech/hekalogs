@@ -3,6 +3,20 @@
 
 
     <url>
+        <loc>https://6c.hekatech.cc/tags/RIME/</loc>
+        <lastmod>2023-09-24T04:02:24.701Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://6c.hekatech.cc/tags/git/</loc>
+        <lastmod>2023-09-24T04:02:24.701Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://6c.hekatech.cc/tags/%E5%BB%BA%E7%AB%99%E7%AC%94%E8%AE%B0/</loc>
         <lastmod>2023-09-11T00:58:19.606Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -19,13 +33,6 @@
     <url>
         <loc>https://6c.hekatech.cc/tags/css/</loc>
         <lastmod>2023-09-06T05:29:06.588Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://6c.hekatech.cc/tags/git/</loc>
-        <lastmod>2023-09-06T05:23:44.562Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
