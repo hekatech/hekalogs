@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>漫漫重装路</title>
+      <link href="/2023/230924-eee/"/>
+      <url>/2023/230924-eee/</url>
+      
+        <content type="html"><![CDATA[<p>管理员安装<br>删除 deploy_Git<br>复制 ssh？</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>使用 waline 自建匿名版</title>
+      <link href="/2023/230908-waline/"/>
+      <url>/2023/230908-waline/</url>
+      
+        <content type="html"><![CDATA[<p>　　9.8 新建的文章，9.10 才开始填大纲。<br>　　同时更新三个 blog 面对文件名一模一样内容也大同小异的 layout 做前端太太太恐怖了……完全不知道在复制代码的哪一步会不小心打乱原来的文件……</p><p>　　好的现在是 9.11 早上 8 点我终于能沉下心开始写这个该死的建站笔记了！！！</p><span id="more"></span><h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><p>　　整个过程按照 <a href="https://waline.js.org/guide/get-started/">官方文档</a> 部署还算顺利，只是存在以下几个问题：</p><h4 id="私有仓库报错"><a href="#私有仓库报错" class="headerlink" title="私有仓库报错"></a>私有仓库报错</h4><p>　　老问题了，右下角会弹一个红色感叹号然后整个进程卡住，建议不要勾选 <code>private repo</code>，在 vercal 部署完成后再转为私有。</p><h4 id="服务器端禁用盒武器"><a href="#服务器端禁用盒武器" class="headerlink" title="服务器端禁用盒武器"></a>服务器端禁用盒武器</h4><p>　　valine 的时候我就一直不理解为什么一个<em><strong>匿名</strong></em>评论版要显示用户 UA，好在 waline 可以从服务器端禁用显示输出空 span，也算眼不见心不烦。<br>　　然后 waline v2.x 就直接上线了<em>显示用户 IP</em> 的功能。<br>　　<strong>你™是不是有病啊？窥私癖？</strong><br>　　不要跟我扯什么响应■■政策需要，这个 B 东西是默认打开的而且无法关闭，是的无法关闭，虽然提供了后端环境变量但只要登录了<em>管理员帐号</em>就一定会在前端看到发送人的 IP，如果不改前端源码就只能用 CSS <code>display: none</code> 来达成眼不见心不烦。<br>　　如果这玩意不是开源 + 自建后端我一定把它拉黑……<br>　　总之对一般用户不输出显示的方式是在 vercel 面板的 <code>Settings</code> → <code>Environment Variables</code> 中添加如下配置：</p><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">DISABLE_USERAGENT</span> = <span class="literal">true</span></span><br><span class="line"><span class="attr">DISABLE_REGION</span> = <span class="literal">true</span></span><br></pre></td></tr></table></figure><h4 id="随机头像"><a href="#随机头像" class="headerlink" title="随机头像"></a>随机头像</h4><p>　　waline v2 的默认头像是一个 2B 蝴蝶，挺令人呃然的，参考了 <a href="https://joysblog.vercel.app/posts/configure-waline/">这篇文章</a> 修改回了白色小人。<br>　　在服务端环境变量中添加：</p><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">GRAVATAR_STR</span> = https://cravatar.cn/avatar/&#123;&#123;mail|md5&#125;&#125;?d=mm</span><br></pre></td></tr></table></figure><p>　　↑天哪因为这个参数带有和 hexo 的格式一样的模板标签导致我报错了一个小时反反复复从 0 开始测试找问题在哪搞得我心力交瘁……好想死，已经没有任何力气再写东西了我要睡觉了！！！<br>　　但是为了测试我是不是真的没搞出其它问题我还是要 push 一下 :4o-2: —— in 23/09/10</p><h3 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h3><p>　　waline v2 修改了非常多的地方：</p><ul><li>代码从 JS 变为了模块化的 mjs</li><li>初始化函数由 <code>waline</code> 变为 <code>init</code></li><li>将评论、访客统计和评论统计拆分为了不同的模块</li><li>将访客统计从 <code>visit-count</code> 改成了 <code>pageview-count</code><ul><li>到底意义何在我请问……</li></ul></li></ul><h4 id="评论框"><a href="#评论框" class="headerlink" title="评论框"></a>评论框</h4><p>　　总之需要在正文的 layout 中加入：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">&quot;module&quot;</span>&gt;</span><br><span class="line">  <span class="keyword">import</span> &#123; init &#125; <span class="keyword">from</span> <span class="string">&#x27;https://unpkg.com/@waline/client@v2/dist/waline.mjs&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  init(&#123;</span><br><span class="line">    <span class="attr">el</span>: <span class="string">&#x27;#waline&#x27;</span>, <span class="comment">// 初始化 dom 的 ID</span></span><br><span class="line">    <span class="attr">serverURL</span>: <span class="string">&#x27;填你自己的&#x27;</span>, <span class="comment">// waline 服务端地址</span></span><br><span class="line">    <span class="attr">requiredMeta</span>: [<span class="string">&#x27;nick&#x27;</span>], <span class="comment">// 必填项</span></span><br><span class="line">    <span class="attr">imageUploader</span>: <span class="literal">false</span>, <span class="comment">// 禁用图片上传</span></span><br><span class="line">    <span class="attr">search</span>: <span class="literal">false</span>, <span class="comment">// 禁用搜索</span></span><br><span class="line">    <span class="attr">emoji</span>: <span class="literal">false</span>, <span class="comment">// 禁用 emoji</span></span><br><span class="line">    <span class="attr">pageview</span>: <span class="literal">true</span>, <span class="comment">// 开启访客统计</span></span><br><span class="line">    <span class="attr">comment</span>: <span class="literal">true</span>, <span class="comment">// 开启评论统计</span></span><br><span class="line">  &#125;);</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure><h4 id="评论数-amp-访客统计"><a href="#评论数-amp-访客统计" class="headerlink" title="评论数 &amp; 访客统计"></a>评论数 &amp; 访客统计</h4><p>　　在不需要评论框只需要统计的页面插入如下代码：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">&quot;module&quot;</span>&gt;</span><br><span class="line">  <span class="keyword">import</span> &#123; pageviewCount &#125; <span class="keyword">from</span> <span class="string">&#x27;https://unpkg.com/@waline/client/dist/pageview.mjs&#x27;</span>;</span><br><span class="line">  <span class="keyword">import</span> &#123; commentCount &#125; <span class="keyword">from</span> <span class="string">&#x27;https://unpkg.com/@waline/client@v2/dist/comment.mjs&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  pageviewCount(&#123;</span><br><span class="line">    <span class="attr">serverURL</span>: <span class="string">&#x27;填你自己的&#x27;</span>,</span><br><span class="line">    <span class="attr">path</span>: <span class="built_in">window</span>.location.pathname,</span><br><span class="line">  &#125;);</span><br><span class="line">  commentCount(&#123;</span><br><span class="line">    <span class="attr">serverURL</span>: <span class="string">&#x27;填你自己的&#x27;</span>,</span><br><span class="line">    <span class="attr">path</span>: <span class="built_in">window</span>.location.pathname,</span><br><span class="line">  &#125;);</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure><h3 id="匿名版"><a href="#匿名版" class="headerlink" title="匿名版"></a>匿名版</h3><p>　　其实把评论框导入完了设置一个匿名版很简单……在初始化的时候进行如下设置即可：</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">init(&#123;</span><br><span class="line">  <span class="attr">el</span>: <span class="string">&#x27;#waline&#x27;</span>,</span><br><span class="line">  <span class="attr">serverURL</span>: <span class="string">&#x27;填你自己的&#x27;</span>,</span><br><span class="line">  <span class="attr">meta</span>:[<span class="string">&#x27;nick&#x27;</span>, <span class="string">&#x27;mail&#x27;</span>], <span class="comment">// 移除个人网站链接的输入框</span></span><br><span class="line">  <span class="attr">requiredMeta</span>: [], <span class="comment">// 移除必填项</span></span><br><span class="line">  <span class="attr">imageUploader</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">search</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">emoji</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">pageview</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">comment</span>: <span class="literal">true</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure><h3 id="更新日志"><a href="#更新日志" class="headerlink" title="更新日志"></a>更新日志</h3><p>　　截止 23/09/08 的更新与待办：</p><ul><li><code>.ʚ+✦+ɞ.</code><ul><li>为文章添加了自动生成的特殊符号前缀<br>但是位置不是很对，这个东西应该出现在<em>预览</em>和<em>展开内容</em>之间才对<br>研究了一下发现 layout 是解决不了了，大概得用 JS 或者 CSS 伪元素写</li></ul></li><li>继续优化 CSS <em>9.9 已完成</em> ✓</li><li>标签云</li><li>相册<ul><li>用 tag 功能解决吧……</li></ul></li><li>便签 <em>9.9 已完成</em> ✓</li><li>音 / 视频  <em>9.9 已完成</em> ✓<ul><li>上传 vlog 与 podcast</li><li>cdn 加速参考：<a href="https://www.jsdelivr.com/?docs=gh">https://www.jsdelivr.com/?docs=gh</a><br>这个应该只会用来传音视频，图片用这个搞太麻烦了</li><li>opus 编码</li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 维护日志 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> waline </tag>
+            
+            <tag> 建站笔记 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Hello World... Again!</title>
+      <link href="/2023/230906-diary/"/>
+      <url>/2023/230906-diary/</url>
+      
+        <content type="html"><![CDATA[<p>　　新站测试！<br>　　那么今天起由 Achrom-6c / Roxy 运营的「冥月计划开发部」正式落成！啪啪啪啪啪啪【鼓掌<br>　　之后会陆陆续续把网页开发相关的内容移动到这里，4o 那个站用来存放创作相关内容。<br>　　至于狒……呃……狒就埋在那边吧【</p><span id="more"></span><h3 id="Waline-共用"><a href="#Waline-共用" class="headerlink" title="Waline 共用"></a>Waline 共用</h3><p>　　测试成功，特性如下：</p><ul><li>评论似乎可以正常发送</li><li>后台 url 不会区分域名</li><li>站点访客统计似乎是共用的</li></ul><p>　　所以 6c 和 4o 用同一个评论系统感觉问题不是很大，027 那边如果共用还是比较麻烦的……<br>　　但是 waline 现在和以前的版本已经完全是两个东西了，旧版文档也没有存档，我真的好抗拒重新开始啊啊啊啊啊啊啊啊——</p><h3 id="字体测试"><a href="#字体测试" class="headerlink" title="字体测试"></a>字体测试</h3><p><strong>粗体</strong> <em>斜体</em> <del>删除线</del> <code>行内代码</code></p><blockquote><p>我好想用像素体但是 zpix 禁止再分发</p></blockquote><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">让我研究一下</span><br><span class="line">能不能直接外链它的 webfont 文件</span><br></pre></td></tr></table></figure><h3 id="样式修正"><a href="#样式修正" class="headerlink" title="样式修正"></a>样式修正</h3><p>　　想把这个站做成反色版的，另外主题色改成绿色或者薄荷绿？因为是以 Roxy 的身份维护的。<br>　　测试了一下 zpix 的 webfont 版，原作者没有拆分子集，虽然 woff 文件也不大，但是加载还是稍稍有些卡顿。但最大的问题是我没想到这个字体在 PC 浏览器上显示的时候是这个样子的：</p><div class="gallery"><p><img src="/img/230906-font.png" alt="哈哈，我要瞎了"></p></div><p>　　于是绝赞回滚了……</p><h4 id="夜间模式"><a href="#夜间模式" class="headerlink" title="夜间模式"></a>夜间模式</h4><p>　　哈哈我花了两小时一行一行改颜色才发现 CSS 有个反色滤镜，我只要加这么一行东西就可以全解决了：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">html &#123;</span><br><span class="line">  filter: invert(100%) hue-rotate(180deg);</span><br><span class="line">&#125;</span><br><span class="line">img &#123;</span><br><span class="line">  filter: invert(100%) hue-rotate(180deg) contrast(100%);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>　　血压……我的血压……<br>　　算了但是这样阴影会变成白色，手动有手动的好<del>算了我编不下去了</del><br>　　总之先用这个滤镜应付一下评论框，代码框的高亮实在是搞不动了【</p><h3 id="emoji-独立化"><a href="#emoji-独立化" class="headerlink" title="emoji 独立化"></a>emoji 独立化</h3><p>　　每个站都独立搞一个 emoji 文件夹太麻烦了，准备直接做一个独立仓库用来引用，总之先把这个站的 emoji 文件夹删掉了。<br>　　:4o-1: :4o-2: :4o-3: :4o-4: :4o-5: :4o-6: :4o-7:<br>　　好好好，引用成功，还附加了 027 的：</p><ul><li>:027-1: 吃瓜</li><li>跑路 :027-2:</li><li>:027-3: 打拳</li><li>抱米花 :027-4:</li><li>:027-5: 奶茶</li><li>+ 升天 + :027-6:</li><li>:027-7: 手机</li><li>问号 :027-8:</li></ul><p>　　当然这个显示上就有点问题了【毕竟画的时候不是根据正文尺寸做的……<br>　　手机上看问题应该不大。怎么说呢……我可能是时候换个 2K 的显示器了……哈哈 :4o-2:</p><h4 id="新仓库"><a href="#新仓库" class="headerlink" title="新仓库"></a>新仓库</h4><p>　　仓库地址：<a href="https://github.com/hekatech/hekation-emoji">hekation-emoji</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 维护日志 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> css </tag>
+            
+            <tag> waline </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>花开</title>
+      <link href="/2023/230905-reth/"/>
+      <url>/2023/230905-reth/</url>
+      
+        <content type="html"><![CDATA[<p>　　特大喜报：R-027 的测试公式站终于上线！<br>　　看了一下本地文件是从 3 月底写企划文案的时候就开始做的，居然拖了小半年才正式上线，真有我的（真有我的）<br>　　总之把友链界面也顺便更新了，但是因为一系列的问题暂时还不打算公开……总之做新站的时候也踩了不少坑，写篇东西吐槽一下好了【<br>　　大概会是一个前端设计笔记？</p><span id="more"></span><h3 id="设计"><a href="#设计" class="headerlink" title="设计"></a>设计</h3><p>　　一开始做的时候还是想着用<a href="https://github.com/denjones/hexo-theme-chan">「chan」</a>改一下的，一方面是这个主题无论排版还是代码易读性都很棒，另一方面是当时我也确实想不出什么新排版，于是画出来的东西是 P1 这样的：</p><div class="gallery"><ul><li><img src="/img/230905-reth.png" alt="初版设计，今天翻出来我才想起来这个 logo 本来应该是月亮形状的来着……算了我也可以给每个形象整一套不同的 logo【"></li><li><img src="/img/230905-logo.png" alt="新 logo"></li><li><img src="/img/230905-reth2.png" alt="2.0 版，logo 变成了星星"></li></ul></div><p>　　今天终于把新站 push 上去了，想到 027 的公式站应该会以图文和音乐为主，应该不会有什么代码的部分，所以灵机一动又做了个手帐的设计，如 P3。<br>　　带封面的文章做成小卡的形状。另外想引进一个新样式「便签」，用来记录特别短小的文字内容。暂时还没想好怎么和普通文章区别开来，以及正文链接要怎么处理。那么短的文字内容如果用和长文章一样的排版肯定是不好看的，如果能想办法做一个相关内容集合界面或许会好一些？<br>　　说起来这个内容是不是不应该更新在这里……算了之后找机会做一个维护专用 blog 一起丢进去吧【</p><h3 id="代码：webfont"><a href="#代码：webfont" class="headerlink" title="代码：webfont"></a>代码：webfont</h3><p>　　新公式站使用字体：</p><ul><li>汉字<ul><li>regular：<a href="https://github.com/chawyehsu/lxgw-wenkai-webfont">霞鹜文楷</a></li><li>Bold：霞鹜文楷 screen</li></ul></li><li>其它<ul><li>筑紫 B 丸<br><del>绝赞盗版</del>没办法这个假名真的太好看了……<br>在某个视频里见过一次就念念不忘识图找出来，然后又废了老大劲才找到资源<br>最后自己用 fontlab 提了假名 + 英数符号的子集<br>后来再遇到找不到资源的字体都直接上淘宝买了，真的折寿 :4o-2:</li></ul></li></ul><p>　　Webfont 的详细笔记可参考：<a href="/2023/230313-font/">关于字体的一些吐槽和笔记</a><br>　　顺带一提有件非常难受的事情……就是这两个字体虽然是同一家出的，理论上字重之间应该有一些微妙的默契，但实际上这两个字体只有 regular 线条粗细一致，bold 字重下 <em>B 丸</em>会比<em>霞鹜文楷</em>粗……等等我是不是忘记给 regular 和 bold 指定不同的字体了？？<br>　　检查了一下回来真的忘记设了，好像原来的方案是粗体部分用 <code>LXGW WenKai Screen</code> 来进行额外加粗，但这个字体在 firefox 渲染下真的好丑……以及 <em>screen</em> 的仿粗体可能也许大概好像又比 <em>B 丸</em> 的 bold 粗了一圈，<del>这就是我用盗版的代价吗【</del><br>　　但怎么说汉字粗一点比假名粗更符合阅读规律一点，有空还是改掉吧【</p><h3 id="发布踩坑"><a href="#发布踩坑" class="headerlink" title="发布踩坑"></a>发布踩坑</h3><h4 id="清除历史代码"><a href="#清除历史代码" class="headerlink" title="清除历史代码"></a>清除历史代码</h4><p>　　迟迟不上传的原因是因为 dev 命令一直卡在 <code>writing objects</code> 环节，而且莫名其妙地就要写 2w+ 的大小，仔细研究后发现是因为我直接把旧 blog（本站）的文件拷贝了一份导致 hexo git 库的历史文件也一起被拷进去了，新站删减了一堆文件后又需要新写海量的历史记录，其中还有不少大文件……<br>　　总之最后解决的方式是把 hexo 目录下的 <code>.deploy_git</code> 文件夹直接删除，<code>hexo g</code> 重新生成需要上传的文件即可。</p><h4 id="同帐号下运行多个-hexo-并绑定独立域名"><a href="#同帐号下运行多个-hexo-并绑定独立域名" class="headerlink" title="同帐号下运行多个 hexo 并绑定独立域名"></a>同帐号下运行多个 hexo 并绑定独立域名</h4><p>　　把这个东西写在开头是不是更能骗点击啊？算了我现在暂时不需要【<br>　　总之绝大多数人的第一个 hexo 仓库构成应该都是从这个设置开始的：</p><ul><li>仓库名： username.github.io</li><li>hexo config url: username.github.io</li><li>为仓库的 github pages 添加自定义域名<br>本地 ping 一下 github 的 IP 然后添加到域名 DNS</li></ul><p>　　之后为几个 CSS 仓库也绑定了自定义域名没遇到过奇怪的问题，只是域名 DNS 要转发到 <code>username.github.io</code> 绑定的域名（对我来说就是 <code>4o.cx</code> ）才能让 github 正确检测 DNS 并申请 https 证书，也可能和我绑的是二级域名也有关。<br>　　然而在部署第二个 hexo 的时候遇到了问题，如果把 hexo config url 设置成 <code>username.github.io/repo/</code> 的话会导致所有 source 文件夹内的文件 url 都加一层 <code>/repo/</code>，导致图片 404，当然也有可能是主题的问题？<br>　　但如果去掉 <code>/repo/</code> 页面会直接链接到主仓库去，直接设成自定义域名可不可行我不记得了【<br>　　总之最后折腾了一番用的是这样的设置：</p><ul><li>仓库名：repo</li><li>hexo config url: username.github.io/repo/<br>是的这一轮不管图片有没有 404 先上传再说</li><li>为仓库的 github pages 添加自定义域名<br>将域名 DNS 转发至主 page 的自定义域名（记录类型为 CNAME）</li><li>等 github DNS 检测通过后将 hexo config url 修改为自定义域名<br>重新生成文件并 <code>hexo d</code></li></ul><p>　　其实折腾完我才想起来可能一开始就直接在 source 文件夹里指定 CNAME 里说不定就解决了……但是明明真正的 page 地址在 <a href="//4o.cx/rlietzh">4o.cx/rlietzh</a> 域名却是转发到 <code>4o.cx</code> 这一点我还是搞不太明白 :4o-3:</p><p>　　啊总之能跑就行！这几天作息太烂了该睡了 zzz，写到最后都不知道自己在写些什么东西了……<br>　　↑通宵到下午三点的人造人 :4o-6:</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 维护日志 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 设计 </tag>
+            
+            <tag> css </tag>
+            
+            <tag> git </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
+</search>
