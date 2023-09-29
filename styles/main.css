@@ -912,7 +912,8 @@ blockquote::before,
 .highlight .javascript .title,
 .highlight .coffeescript .title,
 .highlight .keyword,
-.highlight .function {
+.highlight .function,
+.highlight .built_in {
   color: #89a289;
 }
 .post-card-body {
