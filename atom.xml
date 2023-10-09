@@ -6,7 +6,7 @@
   <link href="https://6c.hekatech.cc/atom.xml" rel="self"/>
   
   <link href="https://6c.hekatech.cc/"/>
-  <updated>2023-09-24T04:02:24.701Z</updated>
+  <updated>2023-10-09T06:48:27.027Z</updated>
   <id>https://6c.hekatech.cc/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>AviUtl 入门踩坑全记录</title>
+    <link href="https://6c.hekatech.cc/2023/231009-aviutl/"/>
+    <id>https://6c.hekatech.cc/2023/231009-aviutl/</id>
+    <published>2023-10-09T03:33:19.000Z</published>
+    <updated>2023-10-09T06:48:27.027Z</updated>
+    
+    <content type="html"><![CDATA[<p>　　喜报：截至发出时间我已经用 Aviutl 做了三个视频了，效果喜人，虽然安装的过程不可谓不折腾……<br>　　总之以下是一些踩坑记录：</p><span id="more"></span><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>　　本来在 github 下好装好开开心心结果用的时候发现很多插件迷之消失，只能自己去下。然而日文原版的插件用中文系统打开会乱码，用 ntleas 也转码不了已经加密过的文件，更是发现了重度恶性 bug：载入 <code>patch.aul</code> 时扩展编辑窗口中的播放线不会移动，无论怎么设置都没有用。<br>　　聪明如我（……）自然第一时间就想到应该是汉化导致的目标名不匹配，然而将 <code>patch.aul</code> 自带的配置文件全部设为 <em>false</em> 也解决不了，看着 B 站上其他人都可以正常使用我突然冒出一个念头：<strong>该不会是我下载的不对吧？</strong><br>　　然后事实证明，真的是我下载的不对……！Github 版本的安装包有非常多的插件来源是错误 / 丢失的，而且每次装出来的东西根据网络情况会不一样，非常神奇，可能还会混杂一些 <code>拓展编辑 r92</code> 无法支持的插件。总之在百度云下载汉化插件后一切的问题都解决了……<br>　　我还能说什么，我只能感慨一下国内分享软件的现状 :4o-2:</p><h3 id="界面美化"><a href="#界面美化" class="headerlink" title="界面美化"></a>界面美化</h3><h4 id="夜间模式"><a href="#夜间模式" class="headerlink" title="夜间模式"></a>夜间模式</h4><blockquote><p>依赖：<a href="https://github.com/nazonoSAUNA/patch.aul">patch.aul</a> + <a href="https://github.com/hebiiro/AviUtl-Plugin-DarkenWindow">DarkenWindow</a><br><strong>Ps. Github 直接下载版为日文编码，汉化软件使用者请前往 <a href="https://www.bilibili.com/video/BV1LW411k7Rn/">B 站</a>下载汉化插件</strong></p></blockquote><p>　　解压后将 <code>patch.aul</code> 放置在 AviUtl 根目录下，<code>DarkenWindow</code> 则是将 readme 中写到的 <code>cc6.manifest</code>、<code>DarkenWindow.aul</code> 与 <code>DarkenWindow</code> 文件夹放入 AviUtl 目录内的 <code>plugins</code> 文件夹中。<br>　　安装完毕后在主窗口菜单栏右键即可看到主题选项，除了夜间模式以外还有一些非常千禧风格的配色，理论上还可以自己写。</p><p>　　还有一个插件可以把 AviUtl 窗口合并做成 Adobe 全家桶那样：<a href="https://sosakubiyori.com/aviutl-splitwindow/">【AviUtl】ワークスペースを作成できるプラグイン【SplitWindow】</a><br>　　但是我个人觉得 AviUtl 这个拆分窗口的设计做得还挺别致的，只放出来做个记录吧。</p><h3 id="编辑优化"><a href="#编辑优化" class="headerlink" title="编辑优化"></a>编辑优化</h3><h4 id="播放-暂停"><a href="#播放-暂停" class="headerlink" title="播放 / 暂停"></a>播放 / 暂停</h4><p>　　AviUtl 默认设置是在播放中按下空格后会跳回开始播放的位置，下次再播放从同一帧开始，这个设计在浏览动画特效的时候很方便，但在做字幕的时候就比较难受了。<br>　　修改的方式是右键 <em>拓展编辑</em> 窗口（本质就是图层时间轴啦）进入 <em>环境设置</em>，勾选 <code>播放窗口播放时与光标同步</code> 与 <code>光标移动时自动滚动</code> 即可。<br>　　Ps. 如果勾选了还无效大概需要返回上文安装 <code>patch.aul</code></p><h4 id="x264-导出"><a href="#x264-导出" class="headerlink" title="x264 导出"></a>x264 导出</h4><blockquote><p>依赖：<a href="https://github.com/rigaya/x264guiEx">x264guiEx</a><br>这个似乎不用汉化，直接从 github 下载就能用</p></blockquote><p>　　下载后将所有文件拖入根目录，导出视频时使用 <em>文件→插件渲染→x264 扩展渲染</em> 即可。</p><h4 id="显示音频波形"><a href="#显示音频波形" class="headerlink" title="显示音频波形"></a>显示音频波形</h4><blockquote><p>依赖：<a href="https://github.com/hebiiro/AviUtl-Plugin-ShowWaveform">ShowWaveform</a><br>未测试原版是否兼容但<strong>建议下载汉化版</strong></p></blockquote><p>　　下载后依照 readme 将 <code>ShowWaveform.auf</code> 与 <code>ShowWaveform.ini</code> 放入 AviUtl 目录内的 <code>plugins</code> 文件夹中。<br>　　似乎不会自动生效，需要每次启动后手动进入 <em>设置→item 内音频波形设置</em> 菜单点击刷新按钮后才会出现。</p><h4 id="滤镜拖动排序"><a href="#滤镜拖动排序" class="headerlink" title="滤镜拖动排序"></a>滤镜拖动排序</h4><blockquote><p>依赖：<a href="https://github.com/hebiiro/AviUtl-Plugin-DragFilter">DragFilter</a><br>未测试原版是否兼容但<strong>建议下载汉化版</strong></p></blockquote><p>　　适用于所有自带滤镜与动画效果的拖动排序。<br>　　自己看 readme，说累了（累了）。<br>　　吐槽一下这个插件的复制滤镜功能居然不能跨 object 实现而是在同一个 object 内复制滤镜……不是，同一个 object 里挂一串一模一样的滤镜是要干嘛？</p><h4 id="跨物件复制滤镜"><a href="#跨物件复制滤镜" class="headerlink" title="跨物件复制滤镜"></a>跨物件复制滤镜</h4><blockquote><p>依赖：<a href="https://github.com/hebiiro/AviUtl-Plugin-CopyFilter">CopyFilter </a><br>未测试原版是否兼容但<strong>建议下载汉化版</strong></p></blockquote><p>　　适用于所有自带滤镜与动画效果的复制与粘贴，可以在不同物件中操作，<strong>非常适合做字幕时使用</strong>。<br>　　安装方式看 readme。<br>　　选中最上方的滤镜右键选择 <em>复制下方滤镜</em> 即可复制该物体的全部滤镜，在新物体的详情窗口下方右键粘贴即可。</p><h3 id="操作小技巧"><a href="#操作小技巧" class="headerlink" title="操作小技巧"></a>操作小技巧</h3><h4 id="多选"><a href="#多选" class="headerlink" title="多选"></a>多选</h4><p>　　<strong>按住</strong> Ctrl 键可点选 / 框选时间轴（即 <em>扩展编辑</em>）内物体。<br>　　为什么加粗呢是因为一旦松开 Ctrl 键多选就失效了【。<br>　　在按住 Ctrl 的同时可以用鼠标批量移动物体，也可以批量修改详情窗口里的属性，可以用于做字幕时批量修改字体和颜色。</p><h4 id="锁定-新建图层"><a href="#锁定-新建图层" class="headerlink" title="锁定 / 新建图层"></a>锁定 / 新建图层</h4><p>　　右键时间轴（即 <em>扩展编辑</em>）左侧的图层名勾选 <em>锁定图层</em>。<br>　　选择 <em>新建图层</em> 会将所有图层下移一行，需要注意的是 <em>AviUtl 的操作逻辑是图层靠下的覆盖图层在上的</em>，因此这个功能其实并不常用。</p><h4 id="新建合成"><a href="#新建合成" class="headerlink" title="新建合成"></a>新建合成</h4><p>　　类似 AE 的功能。在 <em>扩展编辑</em> 左上角点击 <em>Root</em> 会出现一个场景下拉菜单，选中空白场景即可进入新合成。<br>　　右键点击可设置场景的画幅尺寸与场景名。</p><h4 id="导入合成"><a href="#导入合成" class="headerlink" title="导入合成"></a>导入合成</h4><p>　　在时间轴空白处右键选择 <em>添加媒体物件→场景</em> 即可导入其它合成，默认是静音状态，如需同步插入音频需要选择 <em>场景（音频）</em>选项。<br>　　Root 场景无法插入其它场景。<br>　　可以单独导出某一个场景的视频，在某一段画面用了特别复杂的滤镜时可以考虑通过<strong>「提前导出，以视频的形式加入 root 场景」</strong>的方式减轻系统负担。</p><h4 id="时间轴辅助线"><a href="#时间轴辅助线" class="headerlink" title="时间轴辅助线"></a>时间轴辅助线</h4><p>　　在时间轴空白处右键勾选 <em>网格显示（BPM）</em>，进入 <em>网格设置</em> 后填入 BPM 与节拍即可在时间轴上创建节奏网格，非常方便 BGM 踩点。</p><h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul><li><a href="https://sosakubiyori.com/aviutl-darkenwindow/">【AviUtl】ダークモードにできるプラグイン【黒窓】</a></li></ul>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;　　喜报：截至发出时间我已经用 Aviutl 做了三个视频了，效果喜人，虽然安装的过程不可谓不折腾……&lt;br&gt;　　总之以下是一些踩坑记录：&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="学习笔记" scheme="https://6c.hekatech.cc/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="AviUtl" scheme="https://6c.hekatech.cc/tags/AviUtl/"/>
+    
+  </entry>
   
   <entry>
     <title>漫漫重装路</title>
